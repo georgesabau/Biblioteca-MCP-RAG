@@ -18,6 +18,7 @@
       <PackageReference Include="Microsoft.Extensions.AI" Version="10.11.0" />
       <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.11.0" />
       <PackageReference Include="Microsoft.Extensions.ML" Version="5.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Validation" Version="10.0.14" />
       <PackageReference Include="Microsoft.ML.Recommender" Version="0.23.1" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
       <PackageReference Include="Scalar.AspNetCore" Version="2.18.7" />

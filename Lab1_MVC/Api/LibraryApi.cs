@@ -32,7 +32,7 @@ public static class LibraryApi
             return Results.Ok(list);
         });
 
-        // Detaliile unei cărți
+        // Detaliile unei carti
        
         books.MapGet("/{id:int}", async Task<Results<Ok<BookDto>, NotFound>> (int id, LibraryContext db) =>
         {
@@ -44,7 +44,7 @@ public static class LibraryApi
             return dto is null ? TypedResults.NotFound() : TypedResults.Ok(dto);
         });
 
-        // Adaugă o carte 
+        // Adauga o carte 
         books.MapPost("/", async (NewBookDto input, LibraryContext db) =>
         {
             var book = new Book { Title = input.Title, Price = input.Price,
@@ -55,7 +55,7 @@ public static class LibraryApi
                 new BookDto(book.ID, book.Title, null, null, book.Price));
         });
 
-        // Modifică prețul
+        // Modifica pretul
         books.MapPatch("/{id:int}", async (int id, PriceDto input, LibraryContext db) =>
         {
             var book = await db.Book.FindAsync(id);
@@ -65,7 +65,7 @@ public static class LibraryApi
             return Results.NoContent();
         });
 
-        // Șterge o carte
+        // Sterge o carte
         books.MapDelete("/{id:int}", async (int id, LibraryContext db) =>
         {
             var book = await db.Book.FindAsync(id);

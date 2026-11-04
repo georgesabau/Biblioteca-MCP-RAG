@@ -25,9 +25,15 @@ builder.Services
 builder.Services.AddValidation();
 builder.Services.AddOpenApi();
 
-var token = builder.Configuration["GitHubModels:Token"] ?? throw new InvalidOperationException("Lipsește GitHubModels:Token (User Secrets).");
-IChatClient chat = new OpenAIClient(new ApiKeyCredential(token), new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") })
-    .GetChatClient("openai/gpt-4o-mini").AsIChatClient();
+IChatClient chat = new OpenAIClient(
+    new ApiKeyCredential("ollama"),
+    new OpenAIClientOptions
+    {
+        Endpoint = new Uri("http://localhost:11434/v1")
+    })
+    .GetChatClient("llama3.2")
+    .AsIChatClient();
+
 builder.Services.AddChatClient(chat);
 
 var app = builder.Build();
