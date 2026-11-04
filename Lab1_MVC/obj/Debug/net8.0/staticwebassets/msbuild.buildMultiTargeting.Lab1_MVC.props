@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/Lab1_MVC.props" />
-</Project>

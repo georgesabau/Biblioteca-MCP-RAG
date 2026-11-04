@@ -1,0 +1,79 @@
+@host = https://localhost:7105
+
+### 1. 
+GET {{host}}/api/v2/books
+
+### 2. 
+GET {{host}}/api/v2/books?genre=SF
+
+### 2b. Controller clasic
+GET {{host}}/api/books?genre=SF
+
+### 3. 
+GET {{host}}/api/v2/books?genre=SF&page=2
+
+### 4. 
+GET {{host}}/api/v2/books/3
+
+### 4b. Controller clasic
+GET {{host}}/api/books/3
+
+### 5. 
+GET {{host}}/api/v2/books/999
+
+### 6. 
+POST {{host}}/api/v2/books
+Content-Type: application/json
+
+{ "title": "Carte de test", "price": 25 }
+
+### 7. Trimiteți EXACT aceeași cerere încă o dată
+POST {{host}}/api/v2/books
+Content-Type: application/json
+
+{ "title": "Carte de test", "price": 25 }
+
+### 8. (înlocuiți 41 cu ID-ul vostru de la cererea 6)
+PATCH {{host}}/api/v2/books/41
+Content-Type: application/json
+
+{ "price": 30 }
+
+### 9. (înlocuiți 41 cu ID-ul vostru de la cererea 6)
+DELETE {{host}}/api/v2/books/41
+
+### 10. Trimiteți EXACT aceeași cerere încă o dată
+DELETE {{host}}/api/v2/books/41
+
+### 11. 
+POST {{host}}/api/v2/books
+Content-Type: application/json
+
+{ "title": "", "price": -5 }
+
+### 12. Doar prețul este greșit
+POST {{host}}/api/v2/books
+Content-Type: application/json
+
+{ "title": "Carte corectă", "price": -5 }
+
+### 13. Preț greșit la modificare
+PATCH {{host}}/api/v2/books/3
+Content-Type: application/json
+
+{ "price": 0 }
+
+### 14. Pitch AI (rulați de 3 ori)
+POST {{host}}/api/v2/books/1/pitch
+
+### 15. Pitch AI (a doua oară)
+POST {{host}}/api/v2/books/1/pitch
+
+### 16. Pitch AI (a treia oară)
+POST {{host}}/api/v2/books/1/pitch
+
+### 17. Pitch AI pentru cartea 37
+POST {{host}}/api/v2/books/37/pitch
+
+### 18. Întrebare liberă
+GET {{host}}/api/v2/ask?q=Ce cărți de Liviu Rebreanu aveți în bibliotecă și sunt disponibile?
