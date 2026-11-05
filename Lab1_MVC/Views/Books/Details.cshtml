@@ -32,8 +32,18 @@
             @Html.DisplayNameFor(model => model.Genre)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre.Name)
+            @Model.Genre?.Name
         </dd>
+    <dt class="col-sm-2">Comenzi</dt>
+    <dd class="col-sm-10">
+    @if (Model.Orders.Count == 0) { <p>Cartea nu are comenzi.</p> }
+    else {
+    <table class="table table-sm"><thead><tr><th>Cititor</th><th>Data</th></tr></thead><tbody>
+    @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+    { <tr><td>@order.Customer.Name</td><td>@order.OrderDate.ToString("yyyy-MM-dd")</td></tr> }
+    </tbody></table>
+    }
+    </dd>
     </dl>
 </div>
 <div>
