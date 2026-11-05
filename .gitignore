@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Instrumente si verificari locale
+.tools/
+tmp/
+Microsoft/
