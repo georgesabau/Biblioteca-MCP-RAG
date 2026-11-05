@@ -29,6 +29,7 @@ namespace Lab1_MVC.Controllers
             else searchString = currentFilter;
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = sortOrder == "title" ? "title_desc" : "title";
+            ViewData["AuthorSortParm"] = sortOrder == "author" ? "author_desc" : "author";
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
             ViewData["CurrentFilter"] = searchString;
             var books = _context.Book.AsNoTracking().AsQueryable();
@@ -37,6 +38,8 @@ namespace Lab1_MVC.Controllers
             // SQLite cannot ORDER BY decimal directly; REAL conversion stays in SQL.
             books = sortOrder switch
             {
+                "author" => books.OrderBy(b => b.Author != null ? b.Author.FirstName + " " + b.Author.LastName : "").ThenBy(b => b.ID),
+                "author_desc" => books.OrderByDescending(b => b.Author != null ? b.Author.FirstName + " " + b.Author.LastName : "").ThenBy(b => b.ID),
                 "title" => books.OrderBy(b => b.Title).ThenBy(b => b.ID),
                 "price" => books.OrderBy(b => (double)b.Price).ThenBy(b => b.ID),
                 "price_desc" => books.OrderByDescending(b => (double)b.Price).ThenBy(b => b.ID),

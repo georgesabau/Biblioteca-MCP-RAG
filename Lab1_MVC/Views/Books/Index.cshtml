@@ -1,40 +1,40 @@
 @model PaginatedList<BookListItem>
 @{ ViewData["Title"] = "Catalog"; }
 <h1>Catalog</h1>
-<p><a asp-action="Create">Carte nouă</a></p>
+<p><a asp-action="Create">Carte nouÄƒ</a></p>
 <form asp-action="Index" method="get" class="mb-3">
     <input type="hidden" name="sortOrder" value="@ViewData["CurrentSort"]" />
-    <label for="searchString">Caută după titlu</label>
+    <label for="searchString">CautÄƒ dupÄƒ titlu</label>
     <input id="searchString" name="searchString" value="@ViewData["CurrentFilter"]" />
-    <button type="submit" class="btn btn-primary btn-sm">Aplică</button>
-    <a asp-action="Index">Toată lista</a>
+    <button type="submit" class="btn btn-primary btn-sm">AplicÄƒ</button>
+    <a asp-action="Index">ToatÄƒ lista</a>
 </form>
 <table class="table">
 <thead><tr>
 <th><a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Titlu</a></th>
-<th>Autor</th><th>Gen</th>
-<th><a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Preț</a></th>
-<th>Comenzi</th><th>Acțiuni</th>
+<th><a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Autor</a></th><th>Gen</th>
+<th><a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">PreÈ›</a></th>
+<th>Comenzi</th><th>AcÈ›iuni</th>
 </tr></thead>
 <tbody>
 @foreach (var item in Model)
 {
 <tr><td>@item.Title</td><td>@item.Author</td><td>@item.Genre</td><td>@item.Price.ToString("0.00")</td><td>@item.Orders</td>
-<td><a asp-action="Edit" asp-route-id="@item.ID">Editare</a> | <a asp-action="Details" asp-route-id="@item.ID">Detalii</a> | <a asp-action="Delete" asp-route-id="@item.ID">Ștergere</a></td></tr>
+<td><a asp-action="Edit" asp-route-id="@item.ID">Editare</a> | <a asp-action="Details" asp-route-id="@item.ID">Detalii</a> | <a asp-action="Delete" asp-route-id="@item.ID">È˜tergere</a></td></tr>
 }
 </tbody></table>
 
-@if (Model.TotalCount == 0) { <p>Nu există cărți pentru criteriile selectate.</p> }
+@if (Model.TotalCount == 0) { <p>Nu existÄƒ cÄƒrÈ›i pentru criteriile selectate.</p> }
 <nav aria-label="Paginare catalog">
 @if (Model.HasPreviousPage)
 {
-<a class="btn btn-outline-primary" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex - 1)">Înapoi</a>
+<a class="btn btn-outline-primary" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex - 1)">ÃŽnapoi</a>
 }
-else { <span class="btn btn-outline-primary disabled" aria-disabled="true">Înapoi</span> }
+else { <span class="btn btn-outline-primary disabled" aria-disabled="true">ÃŽnapoi</span> }
 @if (Model.HasNextPage)
 {
-<a class="btn btn-outline-primary" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex + 1)">Înainte</a>
+<a class="btn btn-outline-primary" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex + 1)">ÃŽnainte</a>
 }
-else { <span class="btn btn-outline-primary disabled" aria-disabled="true">Înainte</span> }
-<span class="ms-2">Pagina @Model.PageIndex din @Model.TotalPages · @Model.TotalCount rezultate</span>
+else { <span class="btn btn-outline-primary disabled" aria-disabled="true">ÃŽnainte</span> }
+<span class="ms-2">Pagina @Model.PageIndex din @Model.TotalPages Â· @Model.TotalCount rezultate</span>
 </nav>

@@ -1,31 +1,17 @@
-@model Lab1_MVC.Models.Author
-
-@{
-    ViewData["Title"] = "Details";
+@model AuthorDetailsViewModel
+@{ ViewData["Title"] = "Detalii autor"; }
+<h1>Detalii autor</h1>
+<dl class="row">
+<dt class="col-sm-3">Nume complet</dt><dd class="col-sm-9">@Html.DisplayFor(m => m.Author.FullName)</dd>
+<dt class="col-sm-3">Total comenzi</dt><dd class="col-sm-9">@Model.TotalOrders</dd>
+<dt class="col-sm-3">Genuri distincte (B3)</dt><dd class="col-sm-9">@Model.DistinctGenres</dd>
+</dl>
+<h2>Cărțile autorului</h2>
+@if (Model.Books.Count == 0) { <p>Autorul nu are cărți în catalog.</p> }
+<table class="table"><thead><tr><th>Titlu</th><th>Gen</th><th>Preț</th><th>Comenzi</th></tr></thead><tbody>
+@foreach (var book in Model.Books)
+{
+<tr><td><a asp-controller="Books" asp-action="Details" asp-route-id="@book.ID">@book.Title</a></td><td>@book.Genre</td><td>@book.Price.ToString("0.00")</td><td>@book.Orders</td></tr>
 }
-
-<h1>Details</h1>
-
-<div>
-    <h4>Author</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-    <dt class="col-sm-2">Nume complet</dt><dd class="col-sm-10">@Html.DisplayFor(m => m.FullName)</dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+</tbody></table>
+<a asp-action="Edit" asp-route-id="@Model.Author.ID">Editare</a> | <a asp-action="Index">Înapoi la autori</a>

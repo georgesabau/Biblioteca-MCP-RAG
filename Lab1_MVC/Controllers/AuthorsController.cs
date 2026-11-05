@@ -33,14 +33,17 @@ namespace Lab1_MVC.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            return View(author);
+            var author = await _context.Author.AsNoTracking().FirstOrDefaultAsync(a => a.ID == id);
+            if (author is null) return NotFound();
+            var books = _context.Book.AsNoTracking().Where(b => b.AuthorID == id);
+            // Distinct/Count execute before materialization, so the indicator is calculated in SQL.
+            var genreQuery = books.Where(b => b.GenreID != null).Select(b => b.GenreID).Distinct();
+            var distinctGenres = await genreQuery.CountAsync();
+            var totalOrders = await _context.Order.CountAsync(o => o.Book.AuthorID == id);
+            var rows = await books.OrderBy(b => b.Title).ThenBy(b => b.ID)
+                .Select(b => new BookListItem(b.ID, b.Title, author.FullName,
+                    b.Genre != null ? b.Genre.Name : "", b.Price, b.Orders.Count)).ToListAsync();
+            return View(new AuthorDetailsViewModel { Author = author, Books = rows, TotalOrders = totalOrders, DistinctGenres = distinctGenres });
         }
 
         // GET: Authors/Create
