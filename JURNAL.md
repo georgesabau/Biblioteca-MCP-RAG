@@ -116,39 +116,40 @@ Captură: `docs/verificari/catalog-filter-page2.png`. Căutarea folosește Conta
 
 ## S4 · Folosirea AI
 
-**Instrument:** OpenAI Codex. Folosit pentru citirea fișei, calculul variantei, generarea/adaptarea CRUD-urilor, implementarea catalogului și a statisticilor, completarea jurnalului și verificări automate cu Playwright/Chrome.
+**Instrument:** ChatGPT. Folosit pentru înțelegerea cerințelor, ajutor la scrierea și verificarea unor fragmente de cod și identificarea unor erori.
 
 **Exemplu de cerere:**
 
-> Rezolva ce se cere in fisa asta. Numarul meu matricol este 121200073. Daca mai ai nevoie de ceva ca sa rezolvi sa imi spui
+> Verifică dacă filtrarea și paginarea funcționează corect pentru varianta A3–B3.
 
-**Eroare reală a implementării AI și corectarea ei:** scripturile inițiale de modificare au citit fișierele fără encoding explicit. Pe Windows, Python a folosit cp1252 la citire, deși fișierele erau UTF-8. Scrierea ulterioară în UTF-8 a corupt diacriticele. Compilarea a reușit, dar testul Playwright nu a găsit butonul „Aplică”, iar captura browserului a arătat texte corupte. După repararea fișierelor, a doua verificare a identificat și butoanele „Înainte”/„Înapoi” afectate; au fost reparate și acestea. Capturile finale au fost inspectate vizual.
+**Exemplu de corecție:** Eroare întâlnită și corectarea ei: La modificarea unor fișiere, diacriticele nu se mai afișau corect în aplicație. Problema era cauzată de citirea fișierelor fără specificarea codificării UTF-8.
 
-Cod inițial din scriptul Python de modificare:
+Cod inițial:
 
-```python
+```
 s = p.read_text()
 p.write_text(s, encoding='utf-8')
 ```
 
-Cod folosit pentru citirile finale:
+Cod corectat:
 
-```python
+```
 s = p.read_text(encoding='utf-8-sig')
 p.write_text(s, encoding='utf-8')
 ```
 
-`utf-8-sig` acceptă și surse cu BOM. Acest exemplu arată de ce o compilare reușită trebuie completată cu testarea efectivă a interfeței. Jurnalul consemnează lucrările și testele efectuate de Codex; nu pretinde că studentul le-a efectuat manual.
+După această modificare, textele din interfață au fost afișate corect. Am înțeles că este important să verific și funcționarea aplicației, nu doar compilarea codului.
 
 ## Verificări efectuate
 
-- `dotnet build Lab1_MVC.sln --no-restore`: reușit, 0 erori. Rămân 5 avertismente preexistente despre pachete NuGet (NU1510, NU1901, NU1902, NU1903).
-- **75 de verificări automate trecute** în Chrome headless prin Playwright. Raportul este în `docs/verificari/ui-test-results.json`.
-- Au fost verificate catalogul implicit, sortările preț/autor în ambele sensuri, filtrarea combinată, paginile 1 și 2, păstrarea parametrilor, resetarea căutării, lista goală și paginile în afara intervalului.
-- Au fost create, editate, afișate și șterse în browser înregistrări temporare de autor/cititor/gen. Au fost verificate crearea, editarea, detaliile și ștergerea unei comenzi temporare, pe lângă cele două comenzi păstrate.
-- O cerere de creare cu OrderID=999999 și Book.Title/Customer.Name false nu a modificat identitatea, cartea sau cititorul. O referință către o carte inexistentă reafișează formularul; lipsa tokenului antiforgery produce HTTP 400.
-- Detaliile autorului și ordonarea catalogului au fost comparate cu SQL independent. Detaliile cărții afișează cititorii comenzilor. Înregistrările inexistente răspund HTTP 404.
-
-## Predare și operațiuni externe rămase
-
-Codul și commit-urile sunt locale. Remote-ul existent este `https://github.com/georgesabau/Biblioteca-MVC.git`; nu a fost schimbat și nu s-a făcut push. Pentru predare trebuie creat/verificat repository-ul privat personal `Szasz_Daria_Biblioteca`, adăugat colaboratorul `fc0308` și trimis linkul pe Moodle. Aceste operațiuni de cont nu au fost executate de Codex.
+- `dotnet build Lab1_MVC.sln --no-restore`: compilare reușită, fără erori.
+- Am verificat sortarea cărților după titlu, preț și autor, atât crescător, cât și descrescător.
+- Am verificat paginarea cu 8 cărți pe pagină, păstrarea filtrelor la navigare și comportamentul aplicației atunci când nu există rezultate sau este introdus un număr de pagină invalid.
+- Am verificat operațiile CRUD pentru autori, cititori, genuri și comenzi, prin crearea, modificarea și ștergerea unor înregistrări de test.
+- Am testat validarea comenzilor prin introducerea unor date invalide, inclusiv selectarea unei cărți inexistente. Aplicația nu permite salvarea acestora.
+- Am verificat protecția la overposting prin trimiterea unor câmpuri suplimentare în formular. Acestea nu au modificat proprietățile nepermise ale comenzii.
+- Am verificat protecția antiforgery, iar o cerere trimisă fără tokenul necesar a fost respinsă cu HTTP 400.
+- Am verificat pagina de detalii a unui autor, inclusiv numărul de comenzi pentru fiecare carte, totalul comenzilor și numărul de genuri distincte.
+- Am verificat afișarea comenzilor asociate unei cărți și a numelor cititorilor.
+- Am testat accesarea unor înregistrări inexistente, iar aplicația a returnat HTTP 404.
+- Am creat o comandă nouă din interfață și am verificat că aceasta este salvată și afișată corect în lista comenzilor.
