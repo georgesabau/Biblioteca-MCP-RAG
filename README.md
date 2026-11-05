@@ -24,7 +24,7 @@ Deschide `http://localhost:5184/Books`. Celelalte pagini sunt accesibile din men
 - [Cele două comenzi create prin interfață](docs/verificari/orders.png)
 - [Raportul verificărilor automate](docs/verificari/ui-test-results.json)
 
-Datele SQLite sunt locale și ignorate de Git. Cele două comenzi adăugate sunt în baza de pe calculatorul curent; capturile documentează verificarea lor.
+Baza SQLite era deja urmărită de Git în proiectul inițial. Cele două comenzi create prin interfață sunt incluse în baza versionată, care conține acum 302 comenzi; capturile documentează verificarea lor.
 
 ## Predare
 

@@ -34,7 +34,7 @@ La 05.11.2026, Codex a completat și trimis în Chrome formularele `/Orders/Crea
 | 301 | 1984 (ID 38) | 2026-11-05 |
 | 302 | Mândrie și prejudecată (ID 39) | 2026-11-05 |
 
-Comenzile sunt păstrate în baza SQLite locală. Baza este ignorată de Git; o clonă nouă primește cele 300 de comenzi din LibrarySeed. Dovada formularelor finalizate este în `docs/verificari/orders.png`.
+Comenzile sunt păstrate în baza SQLite locală, deja urmărită de Git în proiectul inițial și inclusă în commit-ul final. O clonă a acestui istoric primește 302 comenzi; o bază nouă, fără date, primește cele 300 de comenzi din LibrarySeed. Dovada formularelor finalizate este în `docs/verificari/orders.png`.
 
 ## S2 · Pagina unui autor și sortarea după autor
 
