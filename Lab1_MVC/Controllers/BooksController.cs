@@ -23,18 +23,27 @@ namespace Lab1_MVC.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? sortOrder, string? searchString)
         {
-            var sw = Stopwatch.StartNew();
-
-            var rows = await _context.Book
-                .Select(b => new BookRow(b.Title,
-                    b.Author!.FirstName + " " + b.Author.LastName,
-                    b.Orders.Count))
-                .ToListAsync();
-
-            _logger.LogInformation("Index: {Ms} ms", sw.ElapsedMilliseconds);
-            return View(rows);
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["TitleSortParm"] = sortOrder == "title" ? "title_desc" : "title";
+            ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
+            ViewData["CurrentFilter"] = searchString;
+            var books = _context.Book.AsNoTracking().AsQueryable();
+            if (!string.IsNullOrWhiteSpace(searchString))
+                books = books.Where(b => b.Title.Contains(searchString));
+            // SQLite cannot ORDER BY decimal directly; REAL conversion stays in SQL.
+            books = sortOrder switch
+            {
+                "title" => books.OrderBy(b => b.Title).ThenBy(b => b.ID),
+                "price" => books.OrderBy(b => (double)b.Price).ThenBy(b => b.ID),
+                "price_desc" => books.OrderByDescending(b => (double)b.Price).ThenBy(b => b.ID),
+                _ => books.OrderByDescending(b => b.Title).ThenBy(b => b.ID)
+            };
+            var rows = books.Select(b => new BookListItem(b.ID, b.Title,
+                b.Author != null ? b.Author.FirstName + " " + b.Author.LastName : "",
+                b.Genre != null ? b.Genre.Name : "", b.Price, b.Orders.Count));
+            return View(await rows.ToListAsync());
         }
 
         // GET: Books/Details/5
