@@ -23,7 +23,7 @@ namespace Lab1_MVC.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index(string? sortOrder, string? currentFilter, string? searchString, int? pageNumber)
+        public async Task<IActionResult> Index(string? sortOrder, string? currentFilter, string? searchString, int? pageNumber, decimal? minPrice, decimal? maxPrice)
         {
             if (searchString != null) pageNumber = 1;
             else searchString = currentFilter;
@@ -32,7 +32,16 @@ namespace Lab1_MVC.Controllers
             ViewData["AuthorSortParm"] = sortOrder == "author" ? "author_desc" : "author";
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
             ViewData["CurrentFilter"] = searchString;
+            ViewData["MinPrice"] = minPrice?.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            ViewData["MaxPrice"] = maxPrice?.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (minPrice < 0 || maxPrice < 0)
+                ModelState.AddModelError("", "Prețurile trebuie să fie pozitive sau zero.");
+            if (minPrice > maxPrice)
+                ModelState.AddModelError("", "Prețul minim nu poate depăși prețul maxim.");
             var books = _context.Book.AsNoTracking().AsQueryable();
+            if (!ModelState.IsValid) books = books.Where(b => false);
+            if (minPrice.HasValue) books = books.Where(b => b.Price >= minPrice.Value);
+            if (maxPrice.HasValue) books = books.Where(b => b.Price <= maxPrice.Value);
             if (!string.IsNullOrWhiteSpace(searchString))
                 books = books.Where(b => b.Title.Contains(searchString));
             // SQLite cannot ORDER BY decimal directly; REAL conversion stays in SQL.
