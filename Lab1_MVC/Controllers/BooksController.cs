@@ -23,8 +23,10 @@ namespace Lab1_MVC.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index(string? sortOrder, string? searchString)
+        public async Task<IActionResult> Index(string? sortOrder, string? currentFilter, string? searchString, int? pageNumber)
         {
+            if (searchString != null) pageNumber = 1;
+            else searchString = currentFilter;
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = sortOrder == "title" ? "title_desc" : "title";
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
@@ -43,7 +45,7 @@ namespace Lab1_MVC.Controllers
             var rows = books.Select(b => new BookListItem(b.ID, b.Title,
                 b.Author != null ? b.Author.FirstName + " " + b.Author.LastName : "",
                 b.Genre != null ? b.Genre.Name : "", b.Price, b.Orders.Count));
-            return View(await rows.ToListAsync());
+            return View(await PaginatedList<BookListItem>.CreateAsync(rows, pageNumber ?? 1, 8));
         }
 
         // GET: Books/Details/5
