@@ -4,8 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic.FileIO;
 namespace Lab1_MVC.Controllers;
-public class AdminController(LibraryContext db) : Controller
+public class AdminController(LibraryContext db, Lab1_MVC.Services.RecommenderTrainer trainer) : Controller
 {
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Retrain()
+    {
+        try { var (rmse,count) = await trainer.TrainAsync(); TempData["Msg"] = $"Model reantrenat pe {count} evaluări. RMSE = {rmse:0.0000}"; }
+        catch (InvalidOperationException e) { TempData["Msg"] = e.Message; }
+        return RedirectToAction(nameof(Index));
+    }
     public async Task<IActionResult> Index()
     {
         ViewBag.Ratings = await db.Rating.CountAsync();

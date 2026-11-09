@@ -9,6 +9,8 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using System.ClientModel;
 
+using Lab1_MVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("LibraryContext") ?? throw new InvalidOperationException("Connection string 'LibraryContext' not found.")));
@@ -22,6 +24,7 @@ builder.Services
         filePath: "MLModels/BookRecommender.zip",
         watchForChanges: true);
 
+builder.Services.AddScoped<RecommenderTrainer>();
 builder.Services.AddValidation();
 builder.Services.AddOpenApi();
 
