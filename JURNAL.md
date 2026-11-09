@@ -153,3 +153,61 @@ După această modificare, textele din interfață au fost afișate corect. Am �
 - Am verificat afișarea comenzilor asociate unei cărți și a numelor cititorilor.
 - Am testat accesarea unor înregistrări inexistente, iar aplicația a returnat HTTP 404.
 - Am creat o comandă nouă din interfață și am verificat că aceasta este salvată și afișată corect în lista comenzilor.
+
+# Laboratorul Î5 · Szasz Daria · 121200073 · A3 / B3
+
+## Varianta și predarea
+
+Branch: `laborator-5`, creat din `main` la commit-ul final Î4 `bbfea42`. Main nu a fost modificat. Commit-uri distincte pentru A1, A2, A3, A4, S1 și S2, urmate de verificări și documentare. A3: **minimum 12 evaluări/carte pentru fallback**. B3: **media evaluărilor pe editură**.
+
+## A1 · Evaluările în baza de date
+
+Entitatea Rating are ReaderId (identificator din CSV, independent de Customer), BookID cu cheie externă, Stars și CreatedAt UTC. Migrarea `Ratings` este aplicată automat la pornire. Din `Lab1_MVC/Data/book-ratings.csv` s-au importat **6.599 de rânduri**, reprezentând **300 de cititori distincți**. Reimportarea aceluiași CSV a importat 0 rânduri și a ignorat 6.599 de perechi cititor/carte deja existente.
+
+Formularul `/Admin` validează antetul, identificatorii pozitivi, existența cărții și nota 1–5. Un CSV cu 4 rânduri invalide a fost respins fără inserări. Importul folosește un parser CSV cu suport pentru ghilimele și antiforgery. Evaluările existente pentru aceeași pereche cititor/carte nu sunt suprascrise.
+
+## A2 · Reantrenarea din aplicație
+
+`RecommenderTrainer` încarcă evaluările din SQLite, folosește seed 1, împărțire 80/20, 20 de iterații și rang 16. Rezultatul măsurat: **RMSE = 0,6983**, pe 6.599 de evaluări. RMSE măsoară eroarea de predicție în unități de stele; mai mic înseamnă mai bine, pe aceeași împărțire de test.
+
+Modelul este scris într-un fișier temporar și înlocuit după salvarea completă. Un semafor serializează reantrenările. Pool-ul urmărește schimbările fișierului. Am deschis `/Recommendations?userId=5` și am apelat API-ul după reantrenare, **fără repornirea aplicației**. Scorurile NaN pentru chei necunoscute nu sunt incluse în calculul RMSE. Cu mai puțin de 10 evaluări, formularul afișează un mesaj în loc să încerce antrenarea.
+
+## A3 · API și cold start
+
+Endpoint: `/api/v2/readers/{id}/recommendations?top=5`. Parametrul top este limitat la 1–20. Cărțile deja evaluate sunt excluse, inclusiv din fallback. Ordinea este descrescătoare după scor și apoi după ID, pentru rezultate stabile.
+
+**Diferența dintre cititorii 5 și 999:** cititorul 5 are istoric și primește scoruri personalizate ML.NET, `fallback=false`: Designing Data-Intensive Applications (4,0802), Fata cu un tatuaj de dragon (3,8341), Moromeții (2,9427), Numele vântului (2,9355), Plumb (2,6383). Cu top=3, răspunsul conține exact primele 3.
+
+Cititorul 999 nu există în evaluări: primește media stelelor, `fallback=true`, pentru cărțile cu minimum 12 evaluări: Câinele din Baskerville (4,1397), Domain-Driven Design (3,8118), Fata cu un tatuaj de dragon (3,8061), Dune (3,7438), Istoria critică a românilor (3,7244). Fallback-ul a fost comparat cu o interogare SQL independentă. Nu este necesară o înregistrare Customer pentru ReaderId 999.
+
+## A4 · Clasificarea genului
+
+Proiectul consolă `Biblioteca.Genre.Training` include CSV-ul furnizat, copiat la compilare, și antrenează clasificatorul FeaturizeText + SdcaMaximumEntropy cu seed 1 și split 80/20. Modelul `GenreClassifier.zip` este inclus în MLModels și copiat în output. Rezultatele efective sunt păstrate în `docs/verificari/lab5-genre-training.txt`.
+
+- **MicroAccuracy: 74,7170%**; **MacroAccuracy: 74,4706%**.
+- MicroAccuracy este proporția tuturor exemplelor corect clasificate; MacroAccuracy este media acurateților pe clase, fiecare clasă având aceeași pondere. Numărul diferit de exemple și performanțele diferite între clase explică diferența. Poezie și Nuvelă au recall mai mic (64%, respectiv 62,5%). Distribuția claselor din setul de test este relevantă, nu doar cea din întregul CSV.
+- Cele mai frecvente confuzii direcționale sunt **Poezie → Nuvelă: 6** și **Clasic universal → Roman românesc: 6**. Perechea Poezie/Nuvelă are 11 confuzii în ambele sensuri. Este plauzibil: descrierile literare scurte au teme comune și nu identifică întotdeauna forma literară sau proveniența. Există și SF/Programare, favorizată de vocabularul tehnologic comun și de exemplele intenționat ambigue din CSV.
+- Descrierea exactă a cărții **Dune din baza proiectului**: sugestie **SF**, **72,17%** încredere. Genul este corect.
+- Descrierea **„un detectiv pe o stație spațială”**: sugestie **SF**, **77,83%** încredere. Cuvintele indică atât Polițist, cât și SF; scorul exprimă rezultatul modelului, nu o garanție de corectitudine sau o probabilitate calibrată.
+
+Formularul Books/Create include Description și Year; acestea se și salvează. Butonul Sugerează genul trimite JSON cu token antiforgery, tratează descrierea goală și erorile de rețea, afișând genul și încrederea. Alegerea finală a genului rămâne bibliotecarului. Am verificat și persistența descrierii/anului prin crearea și ștergerea unei cărți temporare.
+
+## S1 · Jurnalul recomandărilor
+
+Fiecare apel reușit al API-ului salvează ReaderId, CreatedAt UTC și un tablou JSON cu ID-urile întoarse, în ordinea răspunsului, inclusiv lista goală. Migrarea `RecommendationLogs` creează tabelul. `/Admin/Log` refolosește PaginatedList cu 8 rânduri/pagină, filtru după cititor și date, sortare după dată ascendent/descendent cu ID secundar. Intervalul include întreaga zi finală, în UTC. Filtrele se păstrează la sortare și paginare; paginile în afara intervalului sunt limitate. Intervalul inversat afișează eroare și rezultate goale. Am verificat pagina a doua cu filtru și sortare, lista goală și o pagină prea mare.
+
+## S2 · Dashboard B3
+
+`/Admin/Dashboard` afișează 6.599 de evaluări, 300 de cititori distincți și media generală **3,246249** (afișată 3,25). Distribuția: 1 stea = 365, 2 = 1.179, 3 = 2.361, 4 = 1.854, 5 = 840. Graficul B3 este media pe editură: Art ≈ 3,16, Humanitas ≈ 3,56, Nemira ≈ 3,09, Polirom ≈ 3,14. Agregările sunt executate în SQL; media pe editură este media tuturor evaluărilor cărților asociate, nu media neponderată a mediilor cărților.
+
+Chart.js este inclus local cu licența, deci graficele nu depind de CDN la utilizare. Sunt disponibile și tabelele cu valorile. O carte cu mai multe edituri contribuie la fiecare editură; una fără editură contribuie doar la statisticile generale. Editurile fără evaluări au medie null. Captura `docs/verificari/lab5-dashboard.png` a fost inspectată: ambele grafice sunt vizibile și lizibile.
+
+## Verificări și abateri
+
+- `dotnet build Lab1_MVC.sln --no-restore`: reușit, 0 erori; rămân avertismentele de pachete existente și avertismentul verificării online NuGet în mediul restricționat.
+- Teste HTTP reale pentru import, reimport, reantrenare, recomandările 5/999, top=3, top=0 și top=99, sugestii SF, formulare și jurnal. Verificări SQL independente pentru fallback și dashboard. Cererile POST fără antiforgery au returnat HTTP 400.
+- Rezultatele măsurate: `docs/verificari/lab5-results.json`. Modelul reantrenat este versionat; pentru o bază nouă, importul se face din Administrare înainte de reantrenare.
+- Baza SQLite avea modificări locale înainte de Î5. Acestea au fost păstrate; baza modificată nu este inclusă în commit-urile Î5, pentru a nu amesteca modificările existente. Importul și verificările au fost executate în baza locală. Fișierul local preexistent `tatus` este păstrat și necomis.
+- Nu există abateri funcționale de la A1–A4/S1–S2. Protecția antiforgery și validarea importului sunt completări față de exemplele minimale din enunț.
+- AI: ChatGPT/Codex a asistat implementarea și testarea. Exemplu de corecție: cheia ReaderId necunoscută este verificată explicit înainte de predicție; fallback-ul exclude și el cărțile evaluate, evitând recomandarea repetată a acestora.
+- Încărcarea linkului ultimului commit pe Moodle rămâne un pas de predare în contul studentului.

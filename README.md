@@ -26,6 +26,24 @@ Deschide `http://localhost:5184/Books`. Celelalte pagini sunt accesibile din men
 
 Baza SQLite era deja urmărită de Git în proiectul inițial. Cele două comenzi create prin interfață sunt incluse în baza versionată, care conține acum 302 comenzi; capturile documentează verificarea lor.
 
-## Predare
+## Laborator Î5 · A3 / B3
 
-Creează un repository privat personal `Szasz_Daria_Biblioteca`, adaugă colaboratorul `fc0308`, încarcă istoricul local în acel repository și trimite doar linkul pe Moodle. Remote-ul actual indică proiectul inițial `georgesabau/Biblioteca-MVC`.
+Branch: `laborator-5`, fără merge în main. Din meniul **Administrare**:
+
+1. Importă `Lab1_MVC/Data/book-ratings.csv` (6.599 evaluări, 300 cititori). Reimportul ignoră duplicatele.
+2. Apasă **Reantrenează modelul de recomandare**; noul model este preluat fără repornire.
+3. Deschide jurnalul recomandărilor și dashboard-ul (media pe editură, B3).
+
+API: `/api/v2/readers/5/recommendations?top=3`. Cititorii necunoscuți folosesc fallback cu minimum 12 evaluări/carte (A3). Fiecare apel este jurnalizat.
+
+În `/Books/Create`, completează descrierea și apasă **Sugerează genul**. Modelele sunt incluse în repository; funcțiile Î5 nu necesită Ollama.
+
+Reantrenarea clasificatorului din rădăcină:
+
+```powershell
+dotnet run --project Biblioteca.Genre.Training -- Biblioteca.Genre.Training/book-descriptions.csv Lab1_MVC/MLModels/GenreClassifier.zip
+```
+
+Rezultate și explicații: [JURNAL.md](JURNAL.md), [teste HTTP/SQL](docs/verificari/lab5-results.json), [clasificare](docs/verificari/lab5-genre-training.txt), [dashboard](docs/verificari/lab5-dashboard.png).
+
+Pentru predare folosește linkul ultimului commit de pe `laborator-5` din repository-ul personal. Încarcă acel link pe Moodle. Baza SQLite locală, modificată anterior lucrului la Î5, rămâne necomisă; pe o clonă importă evaluările din pagina Administrare.

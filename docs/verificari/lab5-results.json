@@ -1,0 +1,260 @@
+{
+  "import": "Au fost importate 6599 evaluări; 0 rânduri invalide, 0 duplicate ignorate.",
+  "reimport": "Au fost importate 0 evaluări; 0 rânduri invalide, 6599 duplicate ignorate.",
+  "retrain": "Model reantrenat pe 6599 evaluări. RMSE = 0.6983",
+  "reader5": [
+    {
+      "bookId": 30,
+      "title": "Designing Data-Intensive Applications",
+      "score": 4.0801725,
+      "fallback": false
+    },
+    {
+      "bookId": 27,
+      "title": "Fata cu un tatuaj de dragon",
+      "score": 3.8340535,
+      "fallback": false
+    },
+    {
+      "bookId": 5,
+      "title": "Moromeții",
+      "score": 2.942654,
+      "fallback": false
+    },
+    {
+      "bookId": 21,
+      "title": "Numele vântului",
+      "score": 2.935462,
+      "fallback": false
+    },
+    {
+      "bookId": 13,
+      "title": "Plumb",
+      "score": 2.6382828,
+      "fallback": false
+    }
+  ],
+  "reader5top3": [
+    {
+      "bookId": 30,
+      "title": "Designing Data-Intensive Applications",
+      "score": 4.0801725,
+      "fallback": false
+    },
+    {
+      "bookId": 27,
+      "title": "Fata cu un tatuaj de dragon",
+      "score": 3.8340535,
+      "fallback": false
+    },
+    {
+      "bookId": 5,
+      "title": "Moromeții",
+      "score": 2.942654,
+      "fallback": false
+    }
+  ],
+  "reader999": [
+    {
+      "bookId": 25,
+      "title": "Câinele din Baskerville",
+      "score": 4.1396646,
+      "fallback": true
+    },
+    {
+      "bookId": 32,
+      "title": "Domain-Driven Design",
+      "score": 3.8117647,
+      "fallback": true
+    },
+    {
+      "bookId": 27,
+      "title": "Fata cu un tatuaj de dragon",
+      "score": 3.8060606,
+      "fallback": true
+    },
+    {
+      "bookId": 16,
+      "title": "Dune",
+      "score": 3.74375,
+      "fallback": true
+    },
+    {
+      "bookId": 35,
+      "title": "Istoria critică a românilor",
+      "score": 3.724359,
+      "fallback": true
+    }
+  ],
+  "top99": [
+    {
+      "bookId": 25,
+      "title": "Câinele din Baskerville",
+      "score": 4.1396646,
+      "fallback": true
+    },
+    {
+      "bookId": 32,
+      "title": "Domain-Driven Design",
+      "score": 3.8117647,
+      "fallback": true
+    },
+    {
+      "bookId": 27,
+      "title": "Fata cu un tatuaj de dragon",
+      "score": 3.8060606,
+      "fallback": true
+    },
+    {
+      "bookId": 16,
+      "title": "Dune",
+      "score": 3.74375,
+      "fallback": true
+    },
+    {
+      "bookId": 35,
+      "title": "Istoria critică a românilor",
+      "score": 3.724359,
+      "fallback": true
+    },
+    {
+      "bookId": 17,
+      "title": "Solaris",
+      "score": 3.7169812,
+      "fallback": true
+    },
+    {
+      "bookId": 34,
+      "title": "Arme, germeni și oțel",
+      "score": 3.642857,
+      "fallback": true
+    },
+    {
+      "bookId": 2,
+      "title": "Enigma Otilieie",
+      "score": 3.617143,
+      "fallback": true
+    },
+    {
+      "bookId": 18,
+      "title": "Neuromancer",
+      "score": 3.6130953,
+      "fallback": true
+    },
+    {
+      "bookId": 24,
+      "title": "Crima din Orient Express",
+      "score": 3.609756,
+      "fallback": true
+    },
+    {
+      "bookId": 20,
+      "title": "Hobbitul",
+      "score": 3.4941862,
+      "fallback": true
+    },
+    {
+      "bookId": 1,
+      "title": "Baltagul",
+      "score": 3.491018,
+      "fallback": true
+    },
+    {
+      "bookId": 30,
+      "title": "Designing Data-Intensive Applications",
+      "score": 3.4685714,
+      "fallback": true
+    },
+    {
+      "bookId": 6,
+      "title": "Ultima noapte de dragoste, întâia noapte de război",
+      "score": 3.4417179,
+      "fallback": true
+    },
+    {
+      "bookId": 5,
+      "title": "Moromeții",
+      "score": 3.3519554,
+      "fallback": true
+    },
+    {
+      "bookId": 23,
+      "title": "Culoarea magiei",
+      "score": 3.3333333,
+      "fallback": true
+    },
+    {
+      "bookId": 9,
+      "title": "Mara",
+      "score": 3.331361,
+      "fallback": true
+    },
+    {
+      "bookId": 13,
+      "title": "Plumb",
+      "score": 3.313253,
+      "fallback": true
+    },
+    {
+      "bookId": 29,
+      "title": "The Pragmatic Programmer",
+      "score": 3.3,
+      "fallback": true
+    },
+    {
+      "bookId": 26,
+      "title": "Numele trandafirului",
+      "score": 3.2774568,
+      "fallback": true
+    }
+  ],
+  "top0": [
+    {
+      "bookId": 25,
+      "title": "Câinele din Baskerville",
+      "score": 4.1396646,
+      "fallback": true
+    }
+  ],
+  "ambiguous": {
+    "genre": "SF",
+    "confidence": 0.7782803
+  },
+  "dune": {
+    "genre": "SF",
+    "confidence": 0.7216811
+  },
+  "statistics": {
+    "ratings": 6599,
+    "readers": 300,
+    "average": 3.2462494317320805
+  },
+  "logCount": 11,
+  "publishers": [
+    [
+      "Art",
+      3.1605800214822772
+    ],
+    [
+      "Humanitas",
+      3.556664709336465
+    ],
+    [
+      "Nemira",
+      3.09201213346815
+    ],
+    [
+      "Polirom",
+      3.1403422982885085
+    ]
+  ],
+  "additionalChecks": [
+    "Invalid CSV rejected",
+    "Empty description HTTP 400",
+    "Antiforgery HTTP 400",
+    "Create saves Description and Year",
+    "Temporary book deleted",
+    "Log page 2 preserves reader and sort",
+    "Dashboard SQL aggregates verified"
+  ]
+}
