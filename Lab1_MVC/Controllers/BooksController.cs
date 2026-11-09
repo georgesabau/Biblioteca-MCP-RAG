@@ -82,6 +82,17 @@ namespace Lab1_MVC.Controllers
             return View(book);
         }
 
+        public record SuggestGenreRequest(string? Description);
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult SuggestGenre([FromBody] SuggestGenreRequest req,
+            [FromServices] Microsoft.Extensions.ML.PredictionEnginePool<BookText, GenrePrediction> pool)
+        {
+            if (string.IsNullOrWhiteSpace(req.Description)) return BadRequest("Descrierea este goală.");
+            if (req.Description.Length > 10000) return BadRequest("Descrierea este prea lungă.");
+            var p = Microsoft.Extensions.ML.PredictionEnginePoolExtensions.Predict(pool, "GenreClassifier", new BookText {Description=req.Description});
+            return Json(new {genre=p.Genre, confidence=p.Score.Length > 0 ? p.Score.Max() : 0});
+        }
+
         // GET: Books/Create
         public IActionResult Create()
         {
@@ -95,7 +106,7 @@ namespace Lab1_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,AuthorID,Price,GenreID")] Book book)
+        public async Task<IActionResult> Create([Bind("Title,AuthorID,Price,GenreID,Description,Year")] Book book)
         {
             if (ModelState.IsValid)
             {
