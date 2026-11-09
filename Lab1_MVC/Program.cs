@@ -41,6 +41,26 @@ builder.Services.AddChatClient(chat);
 
 var app = builder.Build();
 app.MapLibraryApi();
+app.MapGet("/api/v2/readers/{id:int}/recommendations", async (int id, int? top, LibraryContext db, PredictionEnginePool<BookRating, BookRatingPrediction> pool) =>
+{
+    var n = Math.Clamp(top ?? 5, 1, 20);
+    var rated = await db.Rating.Where(r => r.ReaderId == id).Select(r => r.BookID).ToListAsync();
+    var recs = new List<RecommendationDto>();
+    if (rated.Count > 0)
+    {
+        var candidates = await db.Book.AsNoTracking().Where(b => !rated.Contains(b.ID)).Select(b => new {b.ID,b.Title}).ToListAsync();
+        recs = candidates.Select(b => new RecommendationDto(b.ID,b.Title,pool.Predict("BookRecommender", new BookRating {UserId=id,BookId=b.ID}).Score,false))
+            .Where(r => float.IsFinite(r.Score)).OrderByDescending(r => r.Score).ThenBy(r => r.BookId).Take(n).ToList();
+    }
+    if (recs.Count == 0)
+    {
+        var popular = await db.Rating.Where(r => !rated.Contains(r.BookID)).GroupBy(r => new {r.BookID,r.Book.Title})
+            .Where(g => g.Count() >= 12).Select(g => new {g.Key.BookID,g.Key.Title,Score=g.Average(r => r.Stars)})
+            .OrderByDescending(r => r.Score).ThenBy(r => r.BookID).Take(n).ToListAsync();
+        recs = popular.Select(r => new RecommendationDto(r.BookID,r.Title,(float)r.Score,true)).ToList();
+    }
+    return TypedResults.Ok(recs);
+}).WithTags("Recomandări");
 
 app.MapPost("/api/v2/books/{id:int}/pitch", async (int id, LibraryContext db, IChatClient ai) =>
 {

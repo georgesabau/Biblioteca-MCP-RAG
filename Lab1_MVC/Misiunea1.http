@@ -77,3 +77,10 @@ POST {{host}}/api/v2/books/37/pitch
 
 ### 18. Întrebare liberă
 GET {{host}}/api/v2/ask?q=Ce cărți de Liviu Rebreanu aveți în bibliotecă și sunt disponibile?
+
+### Î5 - cititor cunoscut
+GET {{host}}/api/v2/readers/5/recommendations
+###
+GET {{host}}/api/v2/readers/5/recommendations?top=3
+### Cold start A3: minimum 12 evaluări
+GET {{host}}/api/v2/readers/999/recommendations
