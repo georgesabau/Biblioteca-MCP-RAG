@@ -13,6 +13,18 @@ public class AdminController(LibraryContext db, Lab1_MVC.Services.RecommenderTra
         catch (InvalidOperationException e) { TempData["Msg"] = e.Message; }
         return RedirectToAction(nameof(Index));
     }
+    public async Task<IActionResult> Log(int? readerId, DateTime? from, DateTime? to, string? sortOrder, int pageNumber = 1)
+    {
+        ViewBag.ReaderId=readerId; ViewBag.From=from?.ToString("yyyy-MM-dd"); ViewBag.To=to?.ToString("yyyy-MM-dd"); ViewBag.SortOrder=sortOrder;
+        if (from > to) ModelState.AddModelError("", "Data de început depășește data de sfârșit.");
+        var query=db.RecommendationLog.AsNoTracking().AsQueryable();
+        if (!ModelState.IsValid) query=query.Where(r => false);
+        if (readerId.HasValue) query=query.Where(r => r.ReaderId == readerId);
+        if (from.HasValue) query=query.Where(r => r.CreatedAt >= from.Value.Date);
+        if (to.HasValue && to.Value.Date < DateTime.MaxValue.Date) { var end=to.Value.Date.AddDays(1); query=query.Where(r => r.CreatedAt < end); }
+        query=sortOrder == "date" ? query.OrderBy(r => r.CreatedAt).ThenBy(r => r.ID) : query.OrderByDescending(r => r.CreatedAt).ThenByDescending(r => r.ID);
+        return View(await PaginatedList<RecommendationLog>.CreateAsync(query,pageNumber,8));
+    }
     public async Task<IActionResult> Index()
     {
         ViewBag.Ratings = await db.Rating.CountAsync();

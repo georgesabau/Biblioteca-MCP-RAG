@@ -5,6 +5,7 @@ namespace Lab1_MVC.Data;
 
 public class LibraryContext(DbContextOptions<LibraryContext> options) : DbContext(options)
 {
+    public DbSet<RecommendationLog> RecommendationLog { get; set; } = default!;
     public DbSet<Rating> Rating { get; set; } = default!;
     public DbSet<Book> Book { get; set; } = default!;
     public DbSet<Author> Author { get; set; } = default!;

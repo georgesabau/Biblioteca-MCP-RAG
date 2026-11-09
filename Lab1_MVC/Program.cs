@@ -61,6 +61,9 @@ app.MapGet("/api/v2/readers/{id:int}/recommendations", async (int id, int? top, 
             .OrderByDescending(r => r.Score).ThenBy(r => r.BookID).Take(n).ToListAsync();
         recs = popular.Select(r => new RecommendationDto(r.BookID,r.Title,(float)r.Score,true)).ToList();
     }
+    db.RecommendationLog.Add(new RecommendationLog {ReaderId=id, CreatedAt=DateTime.UtcNow,
+        BookIds=System.Text.Json.JsonSerializer.Serialize(recs.Select(r => r.BookId))});
+    await db.SaveChangesAsync();
     return TypedResults.Ok(recs);
 }).WithTags("Recomandări");
 
