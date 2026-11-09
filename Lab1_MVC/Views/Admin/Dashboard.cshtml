@@ -1,0 +1,22 @@
+@model DashboardViewModel
+@using System.Text.Json
+@{ ViewData["Title"]="Dashboard"; }
+<h1>Dashboard · evaluări</h1>
+<div class="row g-3 mb-4">
+<div class="col-md-4"><div class="card card-body"><h2 class="h6">Evaluări</h2><strong class="fs-3">@Model.Ratings</strong></div></div>
+<div class="col-md-4"><div class="card card-body"><h2 class="h6">Cititori distincți</h2><strong class="fs-3">@Model.Readers</strong></div></div>
+<div class="col-md-4"><div class="card card-body"><h2 class="h6">Media generală</h2><strong class="fs-3">@(Model.Ratings == 0 ? "—" : Model.Average.ToString("0.00"))</strong></div></div>
+</div>
+@if(Model.Ratings == 0) { <p>Importați evaluări din pagina Administrare pentru a popula graficele.</p> }
+<div class="row"><section class="col-lg-6"><h2 class="h4">Distribuția notelor</h2><canvas id="stars" role="img" aria-label="Distribuția evaluărilor între 1 și 5 stele"></canvas>
+<table class="table table-sm"><thead><tr><th>Stele</th><th>Evaluări</th></tr></thead><tbody>@for(int i=0;i<5;i++){<tr><td>@(i+1)</td><td>@Model.StarCounts[i]</td></tr>}</tbody></table></section>
+<section class="col-lg-6"><h2 class="h4">Media pe editură · B3</h2><canvas id="publishers" role="img" aria-label="Media evaluărilor pe editură"></canvas>
+<table class="table table-sm"><thead><tr><th>Editură</th><th>Medie</th></tr></thead><tbody>@foreach(var p in Model.Publishers){<tr><td>@p.Name</td><td>@(p.Average?.ToString("0.00") ?? "Fără evaluări")</td></tr>}</tbody></table></section></div>
+<p>O evaluare contribuie la fiecare editură asociată cărții. Cărțile fără editură contribuie doar la media generală.</p>
+@section Scripts {
+<script src="~/lib/chartjs/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('stars'), {type:'bar', data:{labels:['1','2','3','4','5'],datasets:[{label:'Evaluări',data:@Html.Raw(JsonSerializer.Serialize(Model.StarCounts)),backgroundColor:'#376eaf'}]},options:{scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+new Chart(document.getElementById('publishers'), {type:'bar',data:{labels:@Html.Raw(JsonSerializer.Serialize(Model.Publishers.Select(p=>p.Name))),datasets:[{label:'Media stelelor',data:@Html.Raw(JsonSerializer.Serialize(Model.Publishers.Select(p=>p.Average))),backgroundColor:'#29846b'}]},options:{scales:{y:{beginAtZero:true,max:5}}}});
+</script>
+}

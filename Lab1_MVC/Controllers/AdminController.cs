@@ -25,6 +25,17 @@ public class AdminController(LibraryContext db, Lab1_MVC.Services.RecommenderTra
         query=sortOrder == "date" ? query.OrderBy(r => r.CreatedAt).ThenBy(r => r.ID) : query.OrderByDescending(r => r.CreatedAt).ThenByDescending(r => r.ID);
         return View(await PaginatedList<RecommendationLog>.CreateAsync(query,pageNumber,8));
     }
+    public async Task<IActionResult> Dashboard()
+    {
+        var count=await db.Rating.CountAsync();
+        var readers=await db.Rating.Select(r => r.ReaderId).Distinct().CountAsync();
+        var average=count == 0 ? 0 : await db.Rating.AverageAsync(r => r.Stars);
+        var stars=await db.Rating.GroupBy(r => r.Stars).Select(g => new {Stars=g.Key,Count=g.Count()}).ToListAsync();
+        var publishers=await db.Publisher.OrderBy(p => p.Name).Select(p => new PublisherRating(p.Name,
+            db.Rating.Where(r => r.Book.Publishers.Any(bp => bp.ID == p.ID)).Select(r => (double?)r.Stars).Average())).ToListAsync();
+        return View(new DashboardViewModel(count,readers,average,
+            Enumerable.Range(1,5).Select(n => stars.FirstOrDefault(s => s.Stars == n)?.Count ?? 0).ToArray(),publishers));
+    }
     public async Task<IActionResult> Index()
     {
         ViewBag.Ratings = await db.Rating.CountAsync();
