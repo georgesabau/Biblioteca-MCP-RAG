@@ -1,0 +1,10 @@
+﻿1 Inspector ; 2 Agent > Tool-uri disponibile: f1, get_book_details, recommend_books, top_books_by_price, books_by_genre
+
+Tu:   [tool] f1(query=Rebreanu)
+Asistent: După cum arată, Rebreanu are la bibliotecă următoarele cărți:
+
+1. "Ion" (1920) - preț: 20,00 RON
+2. "Pădurea spânzurătoare" (1922) - preț: 39,00 RON
+
+Tu: 
+

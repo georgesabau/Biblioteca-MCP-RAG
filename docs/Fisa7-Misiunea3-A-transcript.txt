@@ -1,0 +1,16 @@
+﻿1 Inspector ; 2 Agent > Tool-uri disponibile: search_books, get_book_details, recommend_books, top_books_by_price, books_by_genre
+
+Tu:   [tool] top_books_by_price(mostExpensive=False, top=3)
+Asistent: Cea mai scump carte din catalog este "Moara cu noroc" de Ioan Slavici, cu un preț de 26.0 lei.
+
+Tu:   [tool] books_by_genre(genre=Programare)
+Asistent: Biblioteca FSEGA are următoarele cărți din genul Programare:
+
+1. "C# in Depth" de Jon Skeet, cu un preț de 195.0 lei
+2. "Clean Code" de Robert C. Martin, cu un preț de 189.0 lei
+3. "Designing Data-Intensive Applications" de Martin Kleppmann, cu un preț de 210.0 lei
+4. "Domain-Driven Design" de Eric Evans, cu un preț de 220.0 lei
+5. "The Pragmatic Programmer" de David Thomas, cu un preț de 175.0 lei
+
+Tu: 
+

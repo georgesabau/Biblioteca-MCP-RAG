@@ -1,0 +1,60 @@
+﻿[
+    {
+        "tool":  "top_books_by_price",
+        "arguments":  {
+                          "mostExpensive":  true,
+                          "top":  1
+                      },
+        "result":  {
+                       "content":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "[{\"id\":32,\"title\":\"Domain-Driven Design\",\"author\":\"Eric Evans\",\"genre\":\"Programare\",\"year\":2003,\"price\":220.0}]"
+                                       }
+                                   ]
+                   }
+    },
+    {
+        "tool":  "top_books_by_price",
+        "arguments":  {
+                          "mostExpensive":  false,
+                          "top":  1
+                      },
+        "result":  {
+                       "content":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "[{\"id\":4,\"title\":\"Ion\",\"author\":\"Liviu Rebreanu\",\"genre\":\"Roman rom\\u00E2nesc\",\"year\":1920,\"price\":20.0}]"
+                                       }
+                                   ]
+                   }
+    },
+    {
+        "tool":  "books_by_genre",
+        "arguments":  {
+                          "genre":  "Programare"
+                      },
+        "result":  {
+                       "content":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "[{\"id\":31,\"title\":\"C# in Depth\",\"author\":\"Jon Skeet\",\"genre\":\"Programare\",\"year\":2019,\"price\":195.0},{\"id\":28,\"title\":\"Clean Code\",\"author\":\"Robert C. Martin\",\"genre\":\"Programare\",\"year\":2008,\"price\":189.0},{\"id\":30,\"title\":\"Designing Data-Intensive Applications\",\"author\":\"Martin Kleppmann\",\"genre\":\"Programare\",\"year\":2017,\"price\":210.0},{\"id\":32,\"title\":\"Domain-Driven Design\",\"author\":\"Eric Evans\",\"genre\":\"Programare\",\"year\":2003,\"price\":220.0},{\"id\":29,\"title\":\"The Pragmatic Programmer\",\"author\":\"David Thomas\",\"genre\":\"Programare\",\"year\":1999,\"price\":175.0}]"
+                                       }
+                                   ]
+                   }
+    },
+    {
+        "tool":  "books_by_genre",
+        "arguments":  {
+                          "genre":  "xyz"
+                      },
+        "result":  {
+                       "content":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "[]"
+                                       }
+                                   ]
+                   }
+    }
+]

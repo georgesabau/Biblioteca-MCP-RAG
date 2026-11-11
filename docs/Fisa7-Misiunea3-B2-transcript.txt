@@ -1,0 +1,10 @@
+﻿1 Inspector ; 2 Agent > Tool-uri disponibile: search_books, get_book_details, recommend_books, top_books_by_price, books_by_genre
+
+Tu:   [tool] search_books(query=Rebreanu)
+Asistent: După verificarea în bibliotecă, am găsit următoarele cărți ale lui Liviu Rebreanu:
+
+- "Ion"
+- "Pădurea spinoasă a vânzorilor"
+
+Tu: 
+

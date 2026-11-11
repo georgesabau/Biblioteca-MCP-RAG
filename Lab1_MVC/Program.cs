@@ -10,8 +10,18 @@ using OpenAI;
 using System.ClientModel;
 
 using Lab1_MVC.Services;
+using Lab1_MVC.Data;
+using Microsoft.Extensions.AI;
+using OllamaSharp;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(
+    new OllamaApiClient(
+        new Uri("http://localhost:11434"),
+        "embeddinggemma"));
+
+builder.Services.AddSingleton<DocumentIndex>();
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("LibraryContext") ?? throw new InvalidOperationException("Connection string 'LibraryContext' not found.")));
 
@@ -27,8 +37,10 @@ builder.Services
 builder.Services.AddPredictionEnginePool<BookText, GenrePrediction>()
     .FromFile(modelName: "GenreClassifier", filePath: "MLModels/GenreClassifier.zip", watchForChanges: true);
 builder.Services.AddScoped<RecommenderTrainer>();
+builder.Services.AddScoped<RecommendationService>();
 builder.Services.AddValidation();
 builder.Services.AddOpenApi();
+builder.Services.AddMcpServer().WithHttpTransport().WithToolsFromAssembly();
 
 IChatClient chat = new OpenAIClient(
     new ApiKeyCredential("ollama"),
@@ -42,6 +54,7 @@ IChatClient chat = new OpenAIClient(
 builder.Services.AddChatClient(chat);
 
 var app = builder.Build();
+app.MapMcp("/mcp");
 app.MapLibraryApi();
 app.MapGet("/api/v2/readers/{id:int}/recommendations", async (int id, int? top, LibraryContext db, PredictionEnginePool<BookRating, BookRatingPrediction> pool) =>
 {
@@ -119,5 +132,18 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
+    var index = app.Services.GetRequiredService<DocumentIndex>();
+
+    await index.BuildAsync(
+        db,
+        Path.Combine(
+            app.Environment.ContentRootPath,
+            "Docs",
+            "regulament.md"));
+}
 
 app.Run();

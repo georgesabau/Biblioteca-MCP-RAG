@@ -1,0 +1,15 @@
+[33me396802[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Î4-S1: păstrare comenzi create din interfață și verificare finală
+[33m7927d97[m Î4-S4: jurnal AI, interogări SQL și verificări în browser
+[33m80cfefd[m Î4: corectare UTF-8 și mesaje de validare după testare
+[33m4e9dea5[m Î4-S3: filtru preț minim-maxim cu păstrarea paginării
+[33m87b5c59[m Î4-S2: detalii autor, genuri distincte în SQL și sortare autor
+[33m67543b0[m Î4-S1: comenzi cu filtru cititor și protecție prin ViewModel
+[33m8e6bb19[m Î4-A5: detalii carte cu autor și comenzi
+[33mb1e246f[m Î4-A4: paginare SQL, 8 cărți pe pagină
+[33m36a79ed[m Î4-A3: listă cu proiecție, sortare și căutare
+[33ma8be7f2[m Î4-A2: CRUD autori, cititori, genuri
+[33maa0b454[m Î4-A1: pornire, variantă A3 B3
+[33m5b62600[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Implementare Biblioteca MVC cu Web API si AI
+[33m454e914[m Laboratorul 3: API minimal + controller, validare, OpenAPI/Scalar, AI, .NET 10
+[33mf21735d[m Intalnirea_2
+[33mc77c82c[m commit
